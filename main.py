@@ -5,6 +5,7 @@ import pandas as pd
 
 from config import Config
 from util.visualizer import showImg, showHist
+from util.color import get_unique_colors
 
 def calculate_color_variety_complexity(pixel_counts):
     N = sum(pixel_counts)
@@ -31,8 +32,9 @@ for image_file in image_files:
     image = cv2.imread(image_file)
     showImg(image)
 
-    # # Separate areas by colors
-    # colors, counts = np.unique(image.reshape(-1, 3), axis=0, return_counts=True)
+    colors, counts = get_unique_colors(image)
+    showHist(counts)
+
 
     # # Calculate color variety complexity (Cs)
     # Cs = calculate_color_variety_complexity(counts)
