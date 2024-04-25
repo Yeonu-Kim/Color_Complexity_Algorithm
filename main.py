@@ -6,21 +6,8 @@ import pandas as pd
 from config import Config
 from util.visualizer import showImg, showHist
 from util.color import get_unique_colors
-
-def calculate_color_variety_complexity(pixel_counts):
-    N = sum(pixel_counts)
-    Cs = -sum(n * np.log(n/N) if n != 0 else 0 for n in pixel_counts)
-    return Cs
-
-def calculate_color_spatial_distribution_complexity(area_pixel_counts):
-    N = sum(area_pixel_counts)
-    Ck = -sum(n * np.log(n/N) if n != 0 else 0 for n in area_pixel_counts)
-    return Ck
-
-def calculate_total_area_complexity(color_complexities, color_counts):
-    N = sum(color_counts)
-    Cd = -sum(Ck * nk / N for Ck, nk in zip(color_complexities, color_counts))
-    return Cd
+from module.cluster import cluster_by_color
+from module.calculator import calculate_color_variety_complexity, calculate_area_complexity
 
 # Use all images in data folder
 # You can set the data path in the config file
@@ -35,9 +22,9 @@ for image_file in image_files:
     colors, counts = get_unique_colors(image)
     showHist(counts)
 
+    mask = cluster_by_color(image)
 
-    # # Calculate color variety complexity (Cs)
-    # Cs = calculate_color_variety_complexity(counts)
+    Cs = calculate_color_variety_complexity(counts)
 
     # # Calculate color spatial distribution complexity (Ck) for each color
     # Ck_values = []
