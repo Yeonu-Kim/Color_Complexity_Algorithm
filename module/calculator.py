@@ -11,19 +11,15 @@ def calculate_local_complexity(mask, labels, N):
     for label in labels:
         new_mask = (mask == label)
         n = np.sum(new_mask)
-        if n > 0:
-            Ck -= n*np.log(n/N)
-        else:
-            print(n)
+        if n > 1:
+            Ck -= n*np.log10(n/N)
     return Ck
-
+            
 def calculate_area_complexity(mask, color_decoder, colors, counts, N):
-    m = len(color_decoder)
     Cd = 0
+
     print("Calculate Area Complexity ...")
     for color, labels in tqdm(color_decoder.items()):
-        if len(labels) == 1:
-            continue
         color_index = colors.index(color)
         nk = counts[color_index]
         Ck = calculate_local_complexity(mask, labels, N)
