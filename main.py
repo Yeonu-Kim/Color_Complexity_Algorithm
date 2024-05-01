@@ -18,8 +18,8 @@ image_files = [os.path.join(data_root, f) for f in os.listdir(data_root) if os.p
 for image_file in image_files:
     # Load image
     image = cv2.imread(image_file)
-    image = cv2.resize(image, Config.RESIZE, interpolation=cv2.INTER_LINEAR) 
-    showImg(image)
+    image = cv2.resize(image, Config.RESIZE, interpolation=cv2.INTER_NEAREST) 
+    # showImg(image)
 
     colors, counts = get_unique_colors(image)
     # showHist(counts) # Set y max limitation to 1000
@@ -37,6 +37,7 @@ for image_file in image_files:
     print(f"Cs: {Cs}")
     print(f"Cd: {Cd}")
     print(f"Complexity: {Complexity}")
+    print(f"Number of Colors: {len(colors)}")
     print("-"*50)
 
 # Save results to CSV

@@ -8,21 +8,25 @@ def calculate_color_variety_complexity(color_counts, N):
 
 def calculate_local_complexity(mask, labels, N):
     Ck = 0
-    for label in labels:
-        new_mask = (mask == label)
-        n = np.sum(new_mask)
-        if n > 1:
-            Ck -= n*np.log10(n/N)
+    label_counts = np.array([np.count_nonzero(mask == label) for label in labels])
+    Ck -= np.sum(label_counts * np.log10(label_counts/N))
+    # relevant_counts = label_counts[label_counts > 0]
+    # if len(relevant_counts) > 0:
+        
     return Ck
             
 def calculate_area_complexity(mask, color_decoder, colors, counts, N):
-    Cd = 0
+    color_decoder = {color: color_decoder[color] for color in colors}
+    print("Calculate spatial complexity ...")
+    spatial_complexity = [calculate_local_complexity(mask, labels, counts[colors.index(color)]) \
+                          for color, labels in tqdm(color_decoder.items())]
+    Cd = np.sum(spatial_complexity*counts/N)
 
-    print("Calculate Area Complexity ...")
-    for color, labels in tqdm(color_decoder.items()):
-        color_index = colors.index(color)
-        nk = counts[color_index]
-        Ck = calculate_local_complexity(mask, labels, N)
-        Cd += Ck*nk/N
+    # print("Calculate Area Complexity ...")
+    # for color, labels in tqdm(color_decoder.items()):
+    #     color_index = colors.index(color)
+    #     nk = counts[color_index]
+    #     Ck = calculate_local_complexity(mask, labels, nk)
+    #     Cd += Ck*nk/N
 
     return Cd
