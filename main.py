@@ -13,15 +13,23 @@ from module.calculator import calculate_color_variety_complexity, calculate_area
 # Use all images in data folder
 # You can set the data path in the config file
 data_root = Config.DATA_DIR
-image_files = [os.path.join(data_root, f) for f in os.listdir(data_root) if os.path.isfile(os.path.join(data_root, f))]
+print(("Load all images..."))
+image_files = [os.path.join(data_root, f) for f in tqdm(os.listdir(data_root)) if os.path.isfile(os.path.join(data_root, f))]
 
 df = pd.DataFrame(columns=['name', 'Cs', 'Cd', 'Complexity', 'colors'])
+print("Start image processing...")
+
 # Process each image
 for image_file in tqdm(image_files):
+    filename, extension = os.path.basename(image_file).split('.')
+
+    if extension != 'jpeg':
+        continue
+
     # Load image
     image = cv2.imread(image_file)
     image = cv2.resize(image, Config.RESIZE, interpolation=cv2.INTER_NEAREST) 
-    # showImg(image)
+    showImg(image)
 
     colors, counts = get_unique_colors(image)
     # showHist(counts) # Set y max limitation to 1000
@@ -33,8 +41,6 @@ for image_file in tqdm(image_files):
     Cd = calculate_area_complexity(mask, color_decoder, colors, counts, total_pixel)
 
     Complexity = Cs + Cd
-
-    filename = os.path.basename(image_file).split('.')[0]
 
     df.loc[len(df)] = [filename, Cs, Cd, Complexity, len(colors)]
 
