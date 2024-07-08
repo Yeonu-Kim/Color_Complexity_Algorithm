@@ -19,17 +19,20 @@ image_files = [os.path.join(data_root, f) for f in tqdm(os.listdir(data_root)) i
 df = pd.DataFrame(columns=['name', 'Cs', 'Cd', 'Complexity', 'colors'])
 print("Start image processing...")
 
+# Set valid extensions
+valid_extension = ['jpeg', 'jpg', 'png']
+
 # Process each image
 for image_file in tqdm(image_files):
     filename, extension = os.path.basename(image_file).split('.')
-
-    if extension != 'jpeg':
+    
+    if not (extension in valid_extension):
         continue
 
     # Load image
     image = cv2.imread(image_file)
     image = cv2.resize(image, Config.RESIZE, interpolation=cv2.INTER_NEAREST) 
-    showImg(image)
+    # showImg(image)
 
     colors, counts = get_unique_colors(image)
     # showHist(counts) # Set y max limitation to 1000
