@@ -37,8 +37,7 @@ def label_pixels(mask, same_pixels, label):
 
 def set_color_decoder(color_decoder, mask, image):
     labels = np.unique(mask)
-    print("Set Color Decoder ...")
-    for label in tqdm(labels):
+    for label in labels:
         target_label = np.where(mask==label)
         color = image[target_label[0][0]][target_label[1][0]]
         target_key = tuple(color.tolist())
@@ -80,10 +79,9 @@ def cluster_by_color(image):
     new_label = 0
     color_decoder = {}
 
-    print("Start masking ...")
     conflict_label = []
     # Check label by each pixel
-    for col in tqdm(range(total_col)):
+    for col in range(total_col):
         for row in range(total_row):
 
             detect_area = check_neighbor(col, row, total_col, total_row)

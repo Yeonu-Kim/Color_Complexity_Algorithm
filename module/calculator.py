@@ -17,9 +17,8 @@ def calculate_local_complexity(mask, labels, N):
             
 def calculate_area_complexity(mask, color_decoder, colors, counts, N):
     color_decoder = {color: color_decoder[color] for color in colors}
-    print("Calculate spatial complexity ...")
     spatial_complexity = [calculate_local_complexity(mask, labels, counts[colors.index(color)]) \
-                          for color, labels in tqdm(color_decoder.items())]
+                          for color, labels in color_decoder.items()]
     Cd = np.sum(spatial_complexity*counts/N)
 
     # print("Calculate Area Complexity ...")

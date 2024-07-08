@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
-import tqdm
+from tqdm import tqdm
 
 from config import Config
 from util.visualizer import showImg, showHist
