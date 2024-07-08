@@ -34,9 +34,9 @@ for image_file in tqdm(image_files):
 
     Complexity = Cs + Cd
 
-    filename = os.path.basename(image_file)
+    filename = os.path.basename(image_file).split('.')[0]
 
-    df.loc[len(df)] = [filename, Cs, Cd, Complexity, colors]
+    df.loc[len(df)] = [filename, Cs, Cd, Complexity, len(colors)]
 
 df.to_csv(os.path.join(Config.OUTPUT_DIR, 'output.CSV'), index=False)
 print(df)
