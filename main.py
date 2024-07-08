@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 import pandas as pd
+import tqdm
 
 from config import Config
 from util.visualizer import showImg, showHist
@@ -14,8 +15,9 @@ from module.calculator import calculate_color_variety_complexity, calculate_area
 data_root = Config.DATA_DIR
 image_files = [os.path.join(data_root, f) for f in os.listdir(data_root) if os.path.isfile(os.path.join(data_root, f))]
 
+df = pd.DataFrame(columns=['name', 'Cs', 'Cd', 'Complexity', 'colors'])
 # Process each image
-for image_file in image_files:
+for image_file in tqdm(image_files):
     # Load image
     image = cv2.imread(image_file)
     image = cv2.resize(image, Config.RESIZE, interpolation=cv2.INTER_NEAREST) 
@@ -32,16 +34,9 @@ for image_file in image_files:
 
     Complexity = Cs + Cd
 
-    print("Result")
-    print("-"*50)
-    print(f"Cs: {Cs}")
-    print(f"Cd: {Cd}")
-    print(f"Complexity: {Complexity}")
-    print(f"Number of Colors: {len(colors)}")
-    print("-"*50)
+    filename = os.path.basename(image_file)
 
-# Save results to CSV
-# filename = os.path.splitext(os.path.basename(image_file))[0] + '_color_complexity.csv'
-# data = {'Color': colors.tolist(), 'Color Count': counts.tolist(), 'Ck': Ck_values}
-# df = pd.DataFrame(data)
-# df.to_csv(filename, index=False)
+    df.loc[len(df)] = [filename, Cs, Cd, Complexity, colors]
+
+df.to_csv(os.path.join(Config.OUTPUT_DIR, 'output.CSV'), index=False)
+print(df)
